@@ -1,15 +1,29 @@
 ---
 layout: page
-title: About
+title: "// something about me"
 permalink: /about/
+comments: false
+sharing: false
+footer: true
 ---
+{% img right /images/manikanta-gade.jpg 'Manikanta Gade' 'Manikanta Gade' %}
 
-Some information about you!
+Hey!
 
-### More Information
+I m Manikanta, from India, with interest in coding using Java, JavaScript, web application development, and more.
 
-A place to include any other types of information that you'd like to include about yourself.
+...
 
-### Contact me
+...
 
-[email@domain.com](mailto:email@domain.com)
+*yayyy! figuring out what more to put here :p*
+
+...
+
+
+
+you can follow me here...
+
+twitter [@ManikantaG](https://twitter.com/ManikantaG)
+
+Github [@ManikantaG](http://github.com/manikantag)
