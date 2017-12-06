@@ -2,7 +2,8 @@
 # This file contains configuration flags to customize your site
 #
 
-remote_theme: rohanchandra/type-theme
+#remote_theme: rohanchandra/type-theme
+remote_theme: jekyll-theme-type
 
 # Name of your site (displayed in the header)
 name: Manikanta G
