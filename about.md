@@ -6,7 +6,8 @@ comments: false
 sharing: false
 footer: true
 ---
-{% img right /images/manikanta-gade.jpg 'Manikanta Gade' 'Manikanta Gade' %}
+
+{% img right https://avatars0.githubusercontent.com/u/317299 'Manikanta Gade' 'Manikanta Gade' %}
 
 Hey!
 
