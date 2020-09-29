@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html ng-app="StickersApp">
+
+<head>
+
+<!--
+ mm   >>    px
+====     ==========
+37.5  >> 141.732283 
+21    >> 79.370079
+40.1  >> 151.559055
+12    >> 45.354331
+5     >> 18.897638
+-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+            font-size: 3mm;
+            box-sizing: border-box;
+        }
+        *:before,
+        *:after {
+          -webkit-box-sizing: border-box;
+             -moz-box-sizing: border-box;
+                  box-sizing: border-box;
+        }
+        
+        html {
+            width: 210mm;
+            height: 297mm;
+            /*padding-top: 12mm;
+            padding-left: 5mm;*/
+        }
+
+        body {
+            margin-top: 14mm; 
+            margin-left: 5.3mm; 
+        }
+        
+        @page {
+            size: 210mm 297mm;
+            /*margin-top: 12mm;
+            margin-left: 5mm;*/
+            /*margin-top: 0mm;
+            margin-left: 0mm;*/
+        }
+        
+        /*
+			Sticker dimensions:
+			width: 37.5mm;
+			height: 21mm;
+        */
+        .sticker {
+            width: 37.5mm;
+            height: 21mm;
+
+
+            /*border: 1px solid gray;*/
+            border-radius: 3px;
+            text-align: center;
+            display: inline-block;
+
+            /*margin-top: .2mm;*/
+            margin-right: 2.6mm;
+            /*margin-bottom: .05mm;*/
+
+            padding-top: 0mm;
+            padding-bottom: .55mm;
+        }
+
+        Sticker {
+            /*width: 40.1mm;
+            height: 21mm;*/
+            display: inline-block;
+        }
+
+        .last-in-row .sticker {
+            margin-right: 0;
+        }
+        
+        .small {
+            font-size: 1.5mm;
+        }
+        
+        .bold {
+            font-weight: bold;
+        }
+        
+        .italic {
+            /*font-style: italic;*/
+        }
+        
+        .line {
+            /*margin-bottom: .3mm;*/
+        }
+        
+        .color {
+            font-size: 12pt;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .price {
+            font-size: 3.2mm;
+        }
+
+        /* config styles */
+
+        #config {
+            border-left: 1px solid gray;
+            position: fixed;
+            right: 0px;
+            top: 0px;
+            bottom: 0px;
+            width: 250px;
+        }
+        #config * {font-size: 16px;}
+        .cfg-options {margin: 5px padding: 5px; border-bottom: 2px solid lightgray;}
+        .cfg-color-filter {width: 100%; font-size: 14px; padding: 3px; border: none; border-bottom: 1px solid lightgray;}
+        .cfg-color-list {overflow-y: scroll; height: 95%; padding-bottom: 50px;}
+        .cfg-color {margin: 5px; padding: 5px; border: 1px solid lightgray; }
+        .cfg-color-name {text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 5px;}
+        .cfg-color-btns {display: flex;}
+        .cfg-color-btns button {height: 20px; margin: auto 3px; flex-grow: 1; background-color: lightblue; border: 1px solid #069;}
+        
+        @media print {
+            .no-print, .select-sticker-note {
+                display: none;
+            }
+        }
+
+        .select-sticker-note {font-size: 16px; color: gray; margin-top: 100px; text-align: center;}
+
+        .padding-5 {padding: 5px;}
+        .margin-5 {margin: 5px;}
+        .block {display: block;}
+        
+
+        /*::-webkit-scrollbar { width: 10px; height: 3px;}
+        ::-webkit-scrollbar-button {  background-color: #666; display: none; }
+        ::-webkit-scrollbar-track {  background-color: #999;}
+        ::-webkit-scrollbar-track-piece { background-color: #ffffff;}
+        ::-webkit-scrollbar-thumb { height: 50px; background-color: #eee; border: 1px solid #bbb; border-radius: 10px;}
+        ::-webkit-scrollbar-corner { background-color: #999;}}
+        ::-webkit-resizer { background-color: #666;}*/
+
+
+
+    </style>
+</head>
+
+<body ng-controller="StickersCtrl as ctrl">
+
+    <div class="stickers-container" ng-if="ctrl.sticker.color">
+        <sticker ng-repeat="n in [].constructor(65) track by $index" 
+                data="ctrl.sticker"
+                strings="ctrl.strings"
+                ng-class="{'last-in-row': ($index + 1) % 5 === 0}" ></sticker>
+    </div>
+    <div class="select-sticker-note" ng-if="!ctrl.sticker.color">
+        Click the weight button of a color to print.
+    </div>
+
+    <div class="no-print" id="config">
+        <div class="cfg-options">
+            <input type="search" ng-model="ctrl.colorFilter" class="cfg-color-filter" placeholder="Search color name" autofocus>
+            <label class="margin-5 block"><input type="checkbox" ng-model="ctrl.isPrint"> Print Stickers</label>
+        </div>
+        <div class="cfg-color-list">
+            <div ng-repeat="color in ctrl.COLOR_NAMES | filter:ctrl.colorFilter" class="cfg-color">
+                <div class="cfg-color-name">{{::color}}</div>
+                <div class="cfg-color-btns">
+                    <button type="button" ng-click="ctrl.printStickers(color, 250, 45)">250</button>
+                    <button type="button" ng-click="ctrl.printStickers(color, 500, 78)">500</button>
+                    <button type="button" ng-click="ctrl.printStickers(color, 1000, 135)">1000</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="angular.min.js"></script>
+    <script type="text/javascript">
+    
+        angular.module('StickersApp', [])
+        .constant('COLOR_NAMES', ['Alphine', 'Apple Green', 'Aqva Green', 'Black', 'Blue', 'Burgundy', 'Coco Brown', 'Coffee Brown', 'Copper Brown', 'GG Red Brown', 'Golden Brown', 'Gray', 'Ivory', 'Magenta', 'Mango', 'Mint Green', 'Mushroom', 'Nut Brown', 'Oasis Green', 'Orange', 'Pink', 'Red Brown', 'Tan Gold', 'Terra Red', 'Vitrif SR', 'White', 'Wood', 'Yellow'])
+
+        .controller('StickersCtrl', [
+            '$timeout', 'COLOR_NAMES',
+            function ($timeout, COLOR_NAMES) {
+
+                var ctrl = this;
+
+                ctrl.isPrint = true;
+
+                ctrl.COLOR_NAMES = COLOR_NAMES;
+
+                ctrl.strings = {
+                    mfgDate: 'Jan 2020',
+                    company: 'UNIVERSAL INDUSTRIES',
+                    address: '15-11-62, Navabharat colon, Gnt-1'
+                };
+
+                ctrl.printStickers = function (colorName, weight, price) {
+                    ctrl.sticker = {color: colorName, weight: weight, price: price};
+
+                    if (ctrl.isPrint) {
+                        $timeout(window.print);    
+                    }
+                };
+
+                // Testing purpose
+//                 ctrl.sticker = {
+//                     color: "Copper Brown",
+//                     price: 135,
+//                     weight:1000
+//                 };
+//                 ctrl.isPrint = false;
+
+            }
+        ])
+        .directive('sticker', [
+            function () {
+                return {
+                    scope: {
+                        data: '=',
+                        strings: '='
+                    },
+                    template: `
+<div class="sticker">
+    <div class="address-line line">
+        <div class="company small line">{{::strings.company}}</div>
+        <!--div class="address small">{{::strings.address}}</div-->
+    </div>
+
+    <div class="mfd-line line">
+        <span class="mfd small">MFD</span>
+        <span class="date bold">{{strings.mfgDate}}</span>
+    </div>
+    <div class="color-line line_">
+        <span class="color bold">{{data.color}}</span>
+    </div>
+    
+    <div class="mrp-line line_">
+        <span class="mrp small">MRP</span>
+        <span class="price bold">{{data.price | currency:"&#8377;"}}</span>
+        <div class="taxes small italic">(Inclusive of all taxes)</div>
+    </div>
+</div>
+`
+                };
+            }
+        ])
+
+    </script>
+
+</body>
+
+</html>
+
+<!--
+
+    MRP Rs. 41.00
+    (Inclusive of all taxes)
+
+    MFG APR 2017
+    COLOR NAME
+
+    UNIVERSAL INDUSTRIES
+    15-11-62, Navabharat colon, Guntur-1
+
+-->
